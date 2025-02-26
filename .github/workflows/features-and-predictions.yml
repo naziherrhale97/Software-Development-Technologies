@@ -35,7 +35,7 @@ jobs:
       - name: Fetch latest changes from remote and rebase
         run: |
           git fetch origin
-          git rebase origin/main
+          git rebase origin/main || echo "Rebase failed, please resolve conflicts manually"
 
       - name: Add files to commit
         run: git add assets/latest_iris.png assets/actual_iris.png assets/confusion_matrix.png assets/df_recent.png
