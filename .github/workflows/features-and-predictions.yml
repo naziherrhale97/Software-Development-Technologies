@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repo content
         uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}  # Add your GitHub token here
 
       - name: Setup python
         uses: actions/setup-python@v3
@@ -20,7 +22,6 @@ jobs:
       - name: Install Jupyter
         run: |
           python -m pip install jupyter
-
       - name: Install scikit-learn
         run: python -m pip install scikit-learn==1.2.1
 
@@ -28,7 +29,6 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-
       - name: Give execute permissions to bash script
         run: chmod +x ./src/01-module/scripts/run-feature-and-prediction-pipelines.sh
 
@@ -36,32 +36,23 @@ jobs:
         run: |
           git fetch origin
           git rebase origin/main || echo "Rebase failed, please resolve conflicts manually"
-
       - name: Add files to commit
         run: git add assets/latest_iris.png assets/actual_iris.png assets/confusion_matrix.png assets/df_recent.png
 
       - name: Check if there are changes to commit
-        id: changes
         run: |
-          if git diff --exit-code; then
-            echo "No changes detected, skipping commit"
-            echo "changes=false" >> $GITHUB_ENV
-          else
-            echo "Changes detected, proceeding with commit"
-            echo "changes=true" >> $GITHUB_ENV
-          fi
-
+          git diff --exit-code || echo "Changes detected, proceeding with commit"
       - name: Commit changes if detected
-        if: env.changes == 'true'
         run: |
-          git commit -m "Automated graph published" --no-verify --signoff
-
-      - name: Push changes if detected
-        if: env.changes == 'true'
-        run: git push origin main
-
+          if ! git diff --exit-code; then
+            git commit -m "Automated graph published" --no-verify --signoff
+          else
+            echo "No changes detected, skipping commit"
+          fi
+      - name: Force push changes (if needed)
+        run: |
+          git push origin main --force || echo "No changes to push"
       - name: Publish github pages
-        if: env.changes == 'true'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Automated graph published"
@@ -77,4 +68,3 @@ jobs:
           skip_checkout: false
           disable_globbing: true
           create_branch: false
-          internal_git_binary: git
