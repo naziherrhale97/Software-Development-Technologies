@@ -32,25 +32,26 @@ jobs:
       - name: Give execute permissions to bash script
         run: chmod +x ./src/01-module/scripts/run-feature-and-prediction-pipelines.sh
 
-      - name: Pull latest changes from remote and rebase
-        run: git pull origin main --rebase
+      - name: Fetch latest changes from remote and rebase
+        run: |
+          git fetch origin
+          git rebase origin/main
 
       - name: Add files to commit
         run: git add assets/latest_iris.png assets/actual_iris.png assets/confusion_matrix.png assets/df_recent.png
 
-      - name: Check for changes before commit
+      - name: Check if there are changes to commit
         run: |
-          git diff --exit-code || git commit -m "Automated graph published"
+          git diff --exit-code || echo "Changes detected, proceeding with commit"
 
-      - name: Publish GitHub pages
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: "Automated graph published"
-          branch: main
-          file_pattern: assets/latest_iris.png assets/actual_iris.png assets/confusion_matrix.png assets/df_recent.png
-          commit_options: '--no-verify --signoff'
-          skip_dirty_check: true
-          skip_fetch: false
-          skip_checkout: false
-          disable_globbing: true
-          create_branch: false
+      - name: Commit changes if detected
+        run: |
+          if ! git diff --exit-code; then
+            git commit -m "Automated graph published" --no-verify --signoff
+          else
+            echo "No changes detected, skipping commit"
+          fi
+
+      - name: Force push changes (if needed)
+        run: |
+          git push origin main --force || echo "No changes to push"
