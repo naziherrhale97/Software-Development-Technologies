@@ -40,7 +40,7 @@ jobs:
       - name: execute python workflows from bash script
         env: 
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
-        run: /home/runner/work/_temp/src/01-module/scripts/run-feature-and-prediction-pipelines.sh
+        run: bash ./src/01-module/scripts/run-feature-and-prediction-pipelines.sh
 
 
       - name: publish github pages
