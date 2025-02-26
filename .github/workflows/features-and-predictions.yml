@@ -45,7 +45,9 @@ jobs:
       - name: Give execute permissions to bash script
         run: chmod +x ./src/01-module/scripts/run-feature-and-prediction-pipelines.sh
 
-          
+      - name: Pull latest changes from the remote
+        run: git pull origin main --rebase
+   
       - name: execute python workflows from bash script
         env: 
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
