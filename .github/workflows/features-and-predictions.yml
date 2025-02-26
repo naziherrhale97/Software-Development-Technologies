@@ -21,9 +21,6 @@ jobs:
         run: |
           python -m pip install jupyter
 
-      - name: List Jupyter Kernels
-        run: jupyter kernelspec list
-
       - name: Install scikit-learn
         run: python -m pip install scikit-learn==1.2.1
 
@@ -35,14 +32,15 @@ jobs:
       - name: Give execute permissions to bash script
         run: chmod +x ./src/01-module/scripts/run-feature-and-prediction-pipelines.sh
 
-      - name: Pull latest changes from the remote
+      - name: Pull latest changes from remote and rebase
         run: git pull origin main --rebase
 
-      - name: Check if there are changes to commit
+      - name: Add files to commit
+        run: git add assets/latest_iris.png assets/actual_iris.png assets/confusion_matrix.png assets/df_recent.png
+
+      - name: Check for changes before commit
         run: |
-          git diff --exit-code || echo "Changes detected"
-          git add assets/latest_iris.png assets/actual_iris.png assets/confusion_matrix.png assets/df_recent.png
-          git commit -m "Automated graph published" || echo "No changes to commit"
+          git diff --exit-code || git commit -m "Automated graph published"
 
       - name: Publish GitHub pages
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -52,3 +50,7 @@ jobs:
           file_pattern: assets/latest_iris.png assets/actual_iris.png assets/confusion_matrix.png assets/df_recent.png
           commit_options: '--no-verify --signoff'
           skip_dirty_check: true
+          skip_fetch: false
+          skip_checkout: false
+          disable_globbing: true
+          create_branch: false
