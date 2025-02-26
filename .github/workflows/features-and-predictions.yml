@@ -9,6 +9,15 @@ jobs:
   test_schedule:
     runs-on: ubuntu-latest
     steps:
+      - name: Print the current directory
+        run: pwd
+
+      - name: List all files and permissions in the scripts directory
+        run: ls -l ./src/01-module/scripts/
+
+      - name: Confirm execute permission on the bash script
+        run: ls -l ./src/01-module/scripts/run-feature-and-prediction-pipelines.sh
+
       - name: checkout repo content
         uses: actions/checkout@v2
 
@@ -40,7 +49,7 @@ jobs:
       - name: execute python workflows from bash script
         env: 
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
-        run: ls -l ./src/01-module/scripts/run-feature-and-prediction-pipelines.sh
+        run: bash $GITHUB_WORKSPACE/src/01-module/scripts/run-feature-and-prediction-pipelines.sh
 
 
       - name: publish github pages
