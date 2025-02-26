@@ -41,22 +41,27 @@ jobs:
         run: git add assets/latest_iris.png assets/actual_iris.png assets/confusion_matrix.png assets/df_recent.png
 
       - name: Check if there are changes to commit
+        id: changes
         run: |
-          git diff --exit-code || echo "Changes detected, proceeding with commit"
-
-      - name: Commit changes if detected
-        run: |
-          if ! git diff --exit-code; then
-            git commit -m "Automated graph published" --no-verify --signoff
-          else
+          if git diff --exit-code; then
             echo "No changes detected, skipping commit"
+            echo "changes=false" >> $GITHUB_ENV
+          else
+            echo "Changes detected, proceeding with commit"
+            echo "changes=true" >> $GITHUB_ENV
           fi
 
-      - name: Force push changes (if needed)
+      - name: Commit changes if detected
+        if: env.changes == 'true'
         run: |
-          git push origin main --force || echo "No changes to push"
+          git commit -m "Automated graph published" --no-verify --signoff
+
+      - name: Push changes if detected
+        if: env.changes == 'true'
+        run: git push origin main
 
       - name: Publish github pages
+        if: env.changes == 'true'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Automated graph published"
