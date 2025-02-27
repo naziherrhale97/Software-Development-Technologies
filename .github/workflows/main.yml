@@ -28,7 +28,6 @@ jobs:
           
       - name: execute python workflows from bash script
         env:           
-          HOPSWORKS_PROJECT: 'lab01'  # Specify your project here
           HOPSWORKS_API_KEY: ${{ secrets.HOPSWORKS_API_KEY }}
         run: ./src/01-module/scripts/run-feature-and-prediction-pipelines.sh
 
