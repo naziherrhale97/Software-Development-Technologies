@@ -1,5 +1,5 @@
 
-## Module 1 - Today's Iris Flower 
+## Module 2 - Today's Iris Flower 
 
 | Predicted | Actual (label)
 |--------|------- 
@@ -15,7 +15,7 @@
 | ![Recent predictions](https://raw.githubusercontent.com/naziherrahel/Software-Development-Technologies/refs/heads/main/assets/df_recent.png) | ![Confusion Matrix](https://raw.githubusercontent.com/naziherrahel/Software-Development-Technologies/refs/heads/main/assets/confusion_matrix.png)
 
 
-## Module 2 - Credit Card Fraud Dashboard
+## Module 3 - Credit Card Fraud Dashboard
 
 
 TODO
