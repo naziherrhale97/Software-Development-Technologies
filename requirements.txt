@@ -1,7 +1,7 @@
 confluent_kafka
 faker
 parsedatetime
-hopsworks
+hopsworks==4.1.8
 nbconvert
 scikit-learn
 plotly
